@@ -10,7 +10,7 @@ export default class News extends Component {
 
         <div className='row my-3'>
           <div className='col-md-4'>
-            <NewsItem title="myTitle" description="myDesc" />
+            <NewsItem title="myTitle" description="myDesc" imgUrl="https://a4.espncdn.com/combiner/i?img=%2Fi%2Fcricket%2Fcricinfo%2F1219926_1296x729.jpg" />
           </div>
           <div className='col-md-4'>
             <NewsItem />
