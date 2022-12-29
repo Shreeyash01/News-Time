@@ -6,15 +6,41 @@ export default class News extends Component {
     super();
     this.state = {
       articles: [],
-      loading: false
+      loading: false,
+      page: 1
     }
   }
   async componentDidMount() {
-    // let url = "https://newsapi.org/v2/top-headlines?country=in&apiKey=1cafd73f5d41498a9f60881d064fa7cd";
-    let url = `https://newsapi.org/v2/top-headlines?country=in&apiKey=${process.env.React_App_ApiKey}`;
+    let url = `https://newsapi.org/v2/top-headlines?country=in&apiKey=${process.env.React_App_ApiKey}&page=1&pageSize=20`;
     let data = await fetch(url);
     let parsedData = await data.json()
-    this.setState({ articles: parsedData.articles })
+    this.setState({
+      articles: parsedData.articles,
+      totalResults: parsedData.totalResults
+    })
+  }
+
+  handleNextClick = async () => {
+    if (this.state.page + 1 > Math.ceil(this.state.totalResults / 20)) {
+    } else {
+      let url = `https://newsapi.org/v2/top-headlines?country=in&apiKey=${process.env.React_App_ApiKey}&page=${this.state.page + 1}&pageSize=20`;
+      let data = await fetch(url);
+      let parsedData = await data.json()
+      this.setState({
+        page: this.state.page + 1,
+        articles: parsedData.articles
+      })
+    }
+  }
+
+  handlePrevClick = async () => {
+    let url = `https://newsapi.org/v2/top-headlines?country=in&apiKey=${process.env.React_App_ApiKey}&page=${this.state.page - 1}&pageSize=20`;
+    let data = await fetch(url);
+    let parsedData = await data.json()
+    this.setState({
+      page: this.state.page - 1,
+      articles: parsedData.articles
+    })
   }
 
   render() {
@@ -26,9 +52,14 @@ export default class News extends Component {
         <div className='row my-3'>
           {this.state.articles?.map((element) => {
             return <div className='col-md-4' key={element.url}>
-              <NewsItem title={element.title?element.title:""} description={element.description?element.description:""} imgUrl={element.urlToImage} newsUrl={element.url} />
+              <NewsItem title={element.title ? element.title : ""} description={element.description ? element.description : ""} imgUrl={element.urlToImage} newsUrl={element.url} />
             </div>
           })}
+        </div>
+
+        <div className="container d-flex justify-content-between">
+          <button type="button" className="btn btn-outline-info" disabled={this.state.page <= 1} onClick={this.handlePrevClick}>&larr; Previous</button>
+          <button type="button" className="btn btn-outline-info" onClick={this.handleNextClick}>Next &rarr;</button>
         </div>
 
       </div>
