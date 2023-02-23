@@ -33,30 +33,34 @@ export default class News extends Component {
   }
 
   async updatePage() {
+    this.props.setProgress(10);
     let url = `https://newsapi.org/v2/top-headlines?country=${this.props.country}&category=${this.props.category}&apiKey=${process.env.React_App_ApiKey}&page=${this.state.page}&pageSize=${this.props.pageSize}`;
     this.setState({ loading: true });
     let data = await fetch(url);
+    this.props.setProgress(30);
     let parsedData = await data.json()
+    this.props.setProgress(70);
     this.setState({
       articles: parsedData.articles,
       totalResults: parsedData.totalResults,
       loading: false
     })
+    this.props.setProgress(100);
   }
 
   async componentDidMount() {
     this.updatePage();
   }
 
-  handleNextClick = async () => {
-    this.setState({ page: this.state.page + 1, });
-    this.updatePage();
-  }
+  // handleNextClick = async () => {
+  //   this.setState({ page: this.state.page + 1, });
+  //   this.updatePage();
+  // }
 
-  handlePrevClick = async () => {
-    this.setState({ page: this.state.page - 1 });
-    this.updatePage();
-  }
+  // handlePrevClick = async () => {
+  //   this.setState({ page: this.state.page - 1 });
+  //   this.updatePage();
+  // }
 
   fetchMoreData = async () => {
     this.setState({ page: this.state.page + 1 });
@@ -87,8 +91,8 @@ export default class News extends Component {
         >
           <div className='container my-3'>
             <div className='row my-3'>
-              {this.state.articles.map((element) => {
-                return <div className='col-md-4' key={element.url}>
+              {this.state.articles.map((element,index) => {
+                return <div className='col-md-4' key={index}>
                   <NewsItem title={element.title ? element.title : ""} description={element.description ? element.description : ""} imgUrl={element.urlToImage} newsUrl={element.url} author={element.author} date={element.publishedAt} source={element.source.name} />
                 </div>
               })}
