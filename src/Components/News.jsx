@@ -23,30 +23,23 @@ const News = (props) => {
     setLoading(false)
     props.setProgress(100);
   }
-
   const capitalizeFirst = (string) => {
     return string.charAt(0).toUpperCase() + string.slice(1);
   }
-
   useEffect(() => {
     updatePage();
     document.title = `${capitalizeFirst(props.category)} - News Time`;
     // eslint-disable-next-line
   }, [])
-
   const fetchMoreData = async () => {
     let url = `https://newsapi.org/v2/top-headlines?country=${props.country}&category=${props.category}&apiKey=${process.env.React_App_ApiKey}&page=${page+1}&pageSize=${props.pageSize}`;
     setPage(page + 1)
-    // this.setState({ loading: true });
     let data = await fetch(url);
     let parsedData = await data.json()
     setArticles(articles.concat(parsedData.articles))
     setTotalResults(parsedData.totalResults)
-
   }
-
   return (
-    // <div className='container my-3'>
     <>
       <h2 className='text-center' style={{ margin: '90px 0px 40px' }}>{capitalizeFirst(props.category)} Headlines -</h2>
 
@@ -69,19 +62,9 @@ const News = (props) => {
         </div>
 
       </InfiniteScroll>
-
-
-      {/* <div className="container d-flex justify-content-between">
-                    <button type="button" className="btn btn-outline-info" disabled={this.state.page <= 1} onClick={this.handlePrevClick}>&larr; Previous</button>
-                    <button disabled={this.state.page + 1 > Math.ceil(this.state.totalResults / props.pageSize)} type="button" className="btn btn-outline-info" onClick={this.handleNextClick}>Next &rarr;</button>
-                </div> */}
-
-      {/* </div> */}
     </>
   )
-
 }
-
 News.defaultProps = {
   country: "in",
   pageSize: 10,
